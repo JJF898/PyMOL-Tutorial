@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ChimeraX Tutorial</title>
+<style>
+  :root {
+    --bg: #E0F1FF; --surface: #FFFFFF; --surface2: #dce8f5; --border: #dce8f5;
+    --accent: #2563EB; --accent2: #7c3aed; --green: #059669; --yellow: #B07500;
+    --text: #1A2540; --muted: #3a4560; --code-bg: #BAE1FF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  nav { width: 250px; min-width: 250px; background: var(--surface); border-right: 1px solid var(--border); padding: 24px 0; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .nav-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .nav-logo h2 { font-size: 15px; color: var(--accent); letter-spacing: .05em; font-weight: 700; }
+  .nav-logo p { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  nav a { display: block; padding: 8px 20px; font-size: 13px; color: var(--muted); text-decoration: none; border-left: 3px solid transparent; transition: all .15s; }
+  nav a:hover, nav a.active { color: var(--text); background: var(--surface2); border-left-color: var(--accent); }
+  .nav-section { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding: 14px 20px 5px; }
+  .nav-sub {padding-left: 32px; font-size: 12px; color: var(--muted); border-left: 3px solid transparent; }
+  .nav-dropdown {display: none; flex-direction: column; }
+  .nav-dropdown.open { display: flex }
+  .nav-dropdown a { padding-left: 32px; font-size: 12px; }
+  .nav-arrow { float: right; transition: transform .2s; }
+  .nav-toggle.open .nav-arrow { transform: rotate(90deg); }
+
+  /*TAB BAR*/
+  .tab-bar { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 18px; color: var(--muted); cursor: pointer; font-size: 14px; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  main { flex: 1; padding: 48px 56px; max-width: 900px; }
+  section { margin-bottom: 72px; scroll-margin-top: 24px; }
+  h1 { font-size: 32px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  h2 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 13px; font-weight: 600; color: var(--accent); margin: 22px 0 8px; text-transform: uppercase; letter-spacing: .06em; }
+  p { color: var(--muted); line-height: 1.75; margin-bottom: 14px; font-size: 14.5px; }
+  strong { color: var(--text); }
+
+  /* HERO */
+  .hero-sub { font-size: 16px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--muted); margin-right: 8px; margin-bottom: 8px; }
+  .badge span { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+
+  /* CODE */
+  .code-block { position: relative; background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin: 14px 0; }
+  .code-block pre { font-family: 'Cascadia Code','Fira Code',monospace; font-size: 13px; line-height: 1.75; white-space: pre-wrap; word-break: break-all; }
+  .code-block .label { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 10px; }
+  .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-size: 11px; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all .15s; }
+  .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
+  .kw { color: #e879f9; } .cmd { color: var(--accent); } .param { color: var(--yellow); }
+  .val { color: var(--green); } .comment { color: #4a5280; font-style: italic; }
+  code { background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 7px; font-family: monospace; font-size: 13px; color: var(--accent); }
+
+  /* ALERTS */
+  .alert { border-left: 3px solid; border-radius: 8px; padding: 13px 16px; margin: 14px 0; font-size: 13.5px; line-height: 1.6; }
+  .alert-info { background: #1a2540; border-color: var(--accent); color: #506043; }
+  .alert-tip { background: #C5E8C5; border-color: var(--green); color: var(--green); }
+  .alert-warn { background: #ffe285; border-color: var(--yellow); color: var(--yellow); }
+  .alert strong { display: block; margin-bottom: 3px; color: inherit; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+  th { background: var(--surface2); color: var(--muted); text-align: left; padding: 10px 14px; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  td:first-child { font-family: monospace; color: var(--yellow); white-space: nowrap; font-size: 13px; }
+  td:nth-child(2) { color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; }
+  .step { display: flex; gap: 20px; position: relative; }
+  .step:not(:last-child)::after { content:''; position: absolute; left: 18px; top: 44px; bottom: 0; width: 2px; background: var(--border); }
+  .step-num { min-width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: white; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 4px; position: relative; z-index: 1; }
+  .step-body { padding-bottom: 30px; flex: 1; }
+  .step-body h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; margin-top: 6px; }
+
+  /* CARDS */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 8px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; transition: border-color .2s; }
+  .card:hover { border-color: var(--accent); }
+  .card h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .card p { font-size: 13px; margin-bottom: 10px; }
+  .tag { display: inline-block; background: var(--surface2); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: var(--accent); margin-bottom: 8px; }
+  .pdb-ids { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .pdb-id { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-family: monospace; font-size: 13px; color: var(--yellow); text-decoration: none; }
+  .pdb-id:hover { border-color: var(--yellow); }
+  .arrow { color: var(--muted); font-size: 16px; }
+
+  /* BUTTONS */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; transition: all .15s; }
+  .btn-green { background: #97d1b7; color: #0a1a10; }
+  .btn-green:hover { background: #35b87e; }
+
+  /* DIAGRAM */
+  .diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .mol-box { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; text-align: center; min-width: 110px; }
+  .mol-box .mol-icon { font-size: 28px; margin-bottom: 5px; }
+  .mol-box .mol-label { font-size: 11px; color: var(--muted); }
+  .mol-box .mol-id { font-family: monospace; font-size: 13px; color: var(--yellow); font-weight: 700; }
+  .flow-arrow { font-size: 26px; color: var(--accent); }
+  .morph-box { background: linear-gradient(135deg,--accent,--accent2); border: 1px solid var(--accent); border-radius: 10px; padding: 14px 18px; text-align: center; }
+  .morph-box .morph-label { font-size: 11px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+
+  /* MOUSE TABLE */
+  .mouse-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .mouse-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .mouse-card .action { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .mouse-card .control { font-size: 13px; color: var(--text); margin-bottom: 3px; }
+  .mouse-card .sub { font-size: 12px; color: var(--muted); }
+
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <h2>ChimeraX Tutorial</h2>
+  
+  <span class="nav-section">Getting started</span>
+  <a href="#Intro">Introduction</div>
+  <a href="#Tool">The Toolbar</div>
+  <a href="#Command">The Command Line</a>
+  <span class="nav-section">The morph function</span>
+  <a href="#morph">The Morph Function</a>
+  <a href="#morph-walkthrough">Morph Walkthrough</a>
+  <a href="#scripts">Downloadable Materials</a>
+</nav>
+
+<main>
+
+<!--START-->
+<section id="Intro">
+<h2>Getting Started</h2>
+<p>This is what you see when you first open ChimeraX. The top toolbar contains most of the basic functions you'll need to open a protein and visualize its structure.</p>
+<img src="Homepage.png" alt="ChimeraX Homepage" style="width: 100%; border-radius: 5px; margin: 16px 0;" />
+<p>The toolbar is divided into sections with shortcuts for quick actions. Each section is described below.</p>
+
+</section>
+  
+ <!--TOOLBAR--> 
+<section id="Tool">
+<div style="display: flex; gap: 5px;">
+  <div style="flex: 1;">
+    <h2 style="border-bottom: none; margin-top: 18px; margin-bottom: 0px;">The Toolbar</h2>
+  </div>
+  <div style="flex: 1;">
+    <p style="color: #9196A1">Remember these buttons only work on the selected atoms, not whole molecular structures</p>
+  </div>
+</div>
+<hr style="border: none; border-top: 1px solid #dce8f5; margin-top: 18px margin-bottom: 32px 0;" />
+
+<div id="tabgroup-1">
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('tabgroup-1','content-Home', this)">Home</button>
+    <button class="tab" onclick="switchTab('tabgroup-1','content-Molecule_Display', this)">Molecule Display</button>
+    <button class="tab" onclick="switchTab('tabgroup-1','content-Nucleotides', this)">Nucleotides</button>
+    <button class="tab" onclick="switchTab('tabgroup-1','content-Graphics', this)">Graphics</button>
+    <button class="tab" onclick="switchTab('tabgroup-1','content-Map', this)">Map</button>
+    <button class="tab" onclick="switchTab('tabgroup-1','content-Medical_Image', this)">Medical Image</button>
+    <button class="tab" onclick="switchTab('tabgroup-1','content-Markers', this)">Markers</button>
+    <button class="tab" onclick="switchTab('tabgroup-1','content-Right_Mouse', this)">Right Mouse</button>
+  </div>
+  
+  <div class="tab-content active" id="content-Home">
+    <img src="Home_menu.png" alt="Home menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
+    <h3>File</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Open —</strong> Opens a local file from your computer, the same as opening a file in Word or any other program.</p>
+      </div>
+      <div class="item">
+        <p><strong>Recent —</strong> Pulls up a menu showing all files you've worked on recently so you can quickly pick up where you left off.</p>
+      </div>
+      <div class="item">
+        <p><strong>Save —</strong> Saves the current state of your session, including the structure, styling, and view.</p>
+      </div>
+    </div>
+    
+    <h3>Images</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Snapshot —</strong> Takes a screenshot of the molecule exactly as it appears on screen — same colors, lighting, and angle — and saves it to your computer.</p>
+      </div>
+      <div class="item">
+        <p><strong>Spin Movie —</strong> Records a short video of the molecule rotating and saves it to your computer. Useful for presentations or publications.</p>
+      </div>
+    </div>
+    
+    <h3>Atoms, Cartoons, & Styles</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Show / Hide Atoms —</strong> Toggles atom visibility, letting you switch between the full atomic structure and just the ribbon diagram.</p>
+      </div>
+      <div class="item">
+        <p><strong>Show / Hide Cartoon —</strong> Toggles the ribbon representation, letting you switch between the cartoon view and the raw atomic structure.</p>
+      </div>
+      <div class="item">
+        <p><strong>Stick / Sphere / Ball-and-Stick —</strong> Three separate buttons that each switch the display style of your molecule. Stick shows bonds as rods, Sphere shows each atom as a full-sized ball (CPK style), and Ball-and-Stick combines both.</p>
+      </div>
+    </div>
+    
+    <h3>Background and Lighting</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Background —</strong> Switches between a white and black background. Black works better for presentations; white is cleaner for figures.</p>
+      </div>
+      <div class="item">
+        <p><strong>Lighting —</strong> Changes the lighting between simple, soft, and full, helping you highlight different structural features.</p>
+      </div>
+    </div>
+    
+    <h3>Inspect</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Inspect —</strong> Opens a panel showing all properties of the selected chains — atom count, color, residues, pseudobonds, and more.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tab-content" id="content-Molecule_Display">
+      <img src="Molecule Display_menu.png" alt="Home menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
+      <h3>Atoms, Cartoon, Surfaces & Styles</h3>
+      <div class="group">
+        <div class="item">
+          <p><strong>Show / Hide Atoms —</strong> Toggles atom visibility, letting you switch between the full atomic structure and just the ribbon diagram.</p>
+        </div>
+        <div class="item">
+          <p><strong>Show / Hide Cartoon —</strong> Toggles the ribbon representation, letting you switch between the cartoon view and the raw atomic structure.</p>
+        </div>
+        <div class="item">
+          <p><strong>Show / Hide Surfaces —</strong> Toggles the representation of molecular surfaces, letting you switch between the surface view and the raw atomic structure.</p>
+        </div>
+        <div class="item">
+          <p><strong>Styles —</strong> Allows you to switch between stick, sphere, and ballstick models for the mplecular structure, as well as choose a style for aminoacid chains in the structure</p>
+        </div>
+      </div>
+     
+      <h3>Coloring</h3>
+      <div class="group">
+        <div class="item">
+          <p><strong>Heteroatom —</strong> Color-codes heteroatoms in a molecular model by element following CPK color conventions.</p>
+        </div>
+        <div class="item">
+          <p><strong>Chain —</strong> Color-codes chains in a molecular model by chain ID (each chain has a different color).</p>
+        </div>
+        <div class="item">
+          <p><strong>Polymer —</strong> Color-codes polymer chains in a molecular model by chain sequence (chains with the same sequence have the same color).</p>
+        </div>
+        <div class="item">
+          <p><strong>Rainbow —</strong> Creates a color gradient (blue to red) starting at the N-terminus, and ending at the C-terminus of only the selected atoms.</p>
+        </div>
+        <div class="item">
+          <p><strong>Electrostatic —</strong> Maps the electrostatic potential onto the surface of a molecular structure. Positive regions are colored red, negative regions are colored blue.</p>
+        </div>
+        <div class="item">
+          <p><strong>Hydrophobic —</strong> Colors the surface of a molecular diagram by hydrophobicity.</p>
+        </div>
+        <div class="item">
+          <p><strong>B-factor —</strong> Colors atoms or surface of a molecular model by their b-factor value from the PDB file. High B-factor regions are colored with shades of red, while low B-factor regions are colored with shades of blue.</p>
+        </div>
+        <div class="item">
+          <p><strong>Nucleotide —</strong> Color-codes selected nucleotide chains by nitrogenous base.</p>
+        </div>
+      </div>
+  </div>
+  <div class="tab-content" id="content-Nucleotides">
+    <img src="Nucleotide_menu.png" alt="Nucleotide menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
+    <h3>Styles</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Styles —</strong> Allows you to choose between plain, filled, slab, tube/slab, tube/ellipsoid, tube/muffler, ladder, or stubs styles to view selected nucleotide chains.</p>
+      </div>
+    </div>
+    <h3>Coloring</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Nucleotide —</strong> Color-codes selected nucleotide chains by nitrogenous base.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tab-content" id="content-Graphics">
+    <img src="Graphics_menu.png" alt="Nucleotide menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
+    <h3>Background</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Background —</strong> Allows you to choose between a white, grey, or black background for the molecular model.</p>
+      </div>
+    </div>
+    
+    <h3>Lighting & Effects</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Lighting —</strong> Allow you to choose between simple, soft, or full lighting for the molecular model.</p>
+      </div>
+      <div class="item">
+        <p><strong>Flat —</strong> Gets rid of any kind of texture in the model, making it look flat.</p>
+      </div>
+      <div class="item">
+        <p><strong>Shadow —</strong> Adds or removes shadows from each atom in the molecular model.</p>
+      </div>
+      <div class="item">
+        <p><strong>Silhouete —</strong> Adds or removes outlines from the atoms in the molecular model.</p>
+      </div>
+    </div>
+  
+    <h3>Camera</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Side View —</strong> Opens a small secondary window that shows a top-down orthographic view of the molecular model from the side. It displays the camera position and clipping planes.</p>
+      </div>
+      <div class="item">
+        <p><strong>View Selected—</strong> Zooms and reorient the camera to fit the selected atoms or residues. Centering them in the window.</p>
+      </div>
+      <div class="item">
+        <p><strong>View All—</strong> Zooms and reorient the camera to fit the whole molecular model. Centering it in the window.</p>
+      </div>
+      <div class="item">
+        <p><strong>Orient—</strong> Resets the camera to a standard viewing orientation. It rotates the scene so that the X axis ponts right, Y points up, and Z points towards the viewer</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tab-content" id="content-Map">
+    <img src="Map_menu.png" alt="Map menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
+    <p style="color: #9196A1">Remember these buttons only work with density maps, not molecular structures.</p>
+    <div style="height: 20px;"></div>
+    <h3>Map & Style</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Show / Hide Map —</strong> Toggles volume map visibility.</p>
+      </div>
+      <div class="item">
+        <p><strong>Style —</strong> Allows you to switch the map diplay between a solid surface, a wireframe mesh, or a flat image slice.</p>
+      </div>
+      <div class="item">
+        <p><strong>Transparent Surface —</strong> Makes the map surface see-through.</p>
+      </div>
+      <div class="item">
+        <p><strong>Outline Box —</strong> Shows a bounding box around the map.</p>
+      </div>
+    </div>
+    <h3>Steps</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Step 1 —</strong> Full resolution of the map.</p>
+      </div>
+      <div class="item">
+        <p><strong>Step 2 —</strong> Half resolution of the map.</p>
+      </div>
+    </div>
+    <h3>Subregions</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Z-plane —</strong> Shows a single flat slice through the map along the Z axis.</p>
+      </div>
+      <div class="item">
+        <p><strong>Slab —</strong> Shows a thick slab slice through the map.</p>
+      </div>
+      <div class="item">
+        <p><strong>Orthoplanes —</strong> Shows three perpendicular slices (X, Y, Z) simultaneously.</p>
+      </div>
+      <div class="item">
+        <p><strong>Full —</strong> Shows the full 3D map.</p>
+      </div>
+      <div class="item">
+        <p><strong>Zone —</strong> Displays only the part of the map within a certain distance of selected atoms.</p>
+      </div>
+    </div>
+    <h3>Appearance</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Color Near Atoms —</strong> Colors the map surface based on nearby atom types.</p>
+      </div>
+      <div class="item">
+        <p><strong>Hide Dust —</strong> Removes small disconnected blobs of density, cleaning up the map display.</p>
+      </div>
+    </div>
+    <h3>Calculations</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Fit —</strong> Fits a model into the desity map.</p>
+      </div>
+      <div class="item">
+        <p><strong>Subtract —</strong> Subtracts one map from another.</p>
+      </div>
+      <div class="item">
+        <p><strong>Smooth —</strong> Smooths the map by averaging neighboring denisty values.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tab-content" id="content-Medical_Image">
+    <img src="Medical Image_menu.png" alt="Medical Image menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
+  </div>
+  <div class="tab-content" id="content-Markers">
+    <img src="Markers_menu.png" alt="Markers menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
+    <h3>Place Markers</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Maximum —</strong> Places markers at the nearest density maximum.</p>
+      </div>
+      <div class="item">
+        <p><strong>Plane —</strong> Place markers on a flat plane.</p>
+      </div>
+      <div class="item">
+        <p><strong>Surface —</strong> Place markers on the surface of a model.</p>
+      </div>
+      <div class="item">
+        <p><strong>Center —</strong> Places a marker at the center of a selected region.</p>
+      </div>
+      <div class="item">
+        <p><strong>Point —</strong> Place markers at an arbitrary clicked position.</p>
+      </div>
+    </div>
+    <h3>Place Markers</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Link —</strong> Draws a line connecting two markers.</p>
+      </div>
+      <div class="item">
+        <p><strong>Move —</strong> Repositions an existing marker.</p>
+      </div>
+      <div class="item">
+        <p><strong>Resize —</strong> Changes the size of a marker.</p>
+      </div>
+      <div class="item">
+        <p><strong>Delete —</strong> Removes a marker.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tab-content" id="content-Right_Mouse">
+    <img src="Right Mouse_menu.png" alt="Right Mouse menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
+    <p style="color: #9196A1">Remember these buttons work to change the function of the right mouse button.</p>
+    <div style="height: 20px;"></div>
+    <h3>Movement</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Select —</strong> Swtches right mouse button to selection mode.</p>
+      </div>
+      <div class="item">
+        <p><strong>Rotate —</strong> Rotates the whole scene.</p>
+      </div>
+      <div class="item">
+        <p><strong>Translate —</strong> Moves the whole scene without rotating.</p>
+      </div>
+      <div class="item">
+        <p><strong>Rotate Model —</strong> Rotates only the selected model.</p>
+      </div>
+      <div class="item">
+        <p><strong>Drag Model —</strong> Drag a specific model around.</p>
+      </div>
+      <div class="item">
+        <p><strong>Move atoms —</strong> Individually move selected atoms around.</p>
+      </div>
+      <div class="item">
+        <p><strong>Pivot —</strong> Sets the center of rotation to a clicked atom.</p>
+      </div>
+    </div>
+    <h3>Annotation</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Distance —</strong> Measures the distance between two clicked atoms.</p>
+      </div>
+      <div class="item">
+        <p><strong>Label —</strong> Add a text label to a selected atom or residue.</p>
+      </div>
+      <div class="item">
+        <p><strong>Move Label —</strong> Reposition existing labels.</p>
+      </div>
+      <div class="item">
+        <p><strong>Key —</strong> Adds a color key legen to the scene.</p>
+      </div>
+    </div>
+    <h3>Clipping</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Clip —</strong> Activates a clipping plane you can drag to slice through the structure.</p>
+      </div>
+      <div class="item">
+        <p><strong>Clip Rotate —</strong> Rotates the clipping plane.</p>
+      </div>
+      <div class="item">
+        <p><strong>Zone —</strong> Shows only atoms within a set distance of clicked atoms.</p>
+      </div>
+    </div>
+    <h3>Map</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Counter Level —</strong> Drag to adjust the density threshold of a map.</p>
+      </div>
+      <div class="item">
+        <p><strong>Rotate Slab —</strong> Rotates the slab slice.</p>
+      </div>
+      <div class="item">
+        <p><strong>Crop —</strong> Crops the map to a smaller region.</p>
+      </div>
+      <div class="item">
+        <p><strong>Tapé —</strong> Measures distances between points.</p>
+      </div>
+      <div class="item">
+        <p><strong>Blob —</strong> Selects a connected region of density.</p>
+      </div>
+      <div class="item">
+        <p><strong>Erase —</strong> erases parts of a map.</p>
+      </div>
+      <div class="item">
+        <p><strong>Play Series —</strong> Plays through a series of maps or frames.</p>
+      </div>
+      <div class="item">
+        <p><strong>Windowing —</strong> Adjusts the brightness and contrast of image-style map display.</p>
+      </div>
+    </div>
+    <h3>Structure Modification</h3>
+    <div class="group">
+      <div class="item">
+        <p><strong>Bond Rotation —</strong> Drag to rotate around a selected bond.</p>
+      </div>
+      <div class="item">
+        <p><strong>Swapaa —</strong> Swaps an amino acid sidechain to a different rotamer.</p>
+      </div>
+      <div class="item">
+        <p><strong>Play coords —</strong> Plays through a trajectory or coordinate set.</p>
+      </div>
+      <div class="item">
+        <p><strong>Tug —</strong> Drag atoms with simulated force (real-time mlecular dynamics).</p>
+      </div>
+      <div class="item">
+        <p><strong>Minimize —</strong> Energy minimizes the structure.</p>
+      </div>
+      <div class="item">
+        <p><strong>Next Docked —</strong> Cycles through docked poses.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</section>  
+
+<section id="Command">  
+
+<div style="height: 40px;"></div>  
+<h2>Commands and Controls</h2>
+
+        <h3>Default Mouse Controls</h3>
+        <div class="mouse-grid">
+          <div class="mouse-card">
+            <div class="action">🔄 Rotate</div>
+            <div class="control">Left drag</div>
+            <div class="sub">Mac: click-drag or 2-finger rotate</div>
+          </div>
+          <div class="mouse-card">
+            <div class="action">✥ Translate</div>
+            <div class="control">Middle / Right drag</div>
+            <div class="sub">Mac: Alt+drag or 3-finger drag</div>
+          </div>
+          <div class="mouse-card">
+            <div class="action">🔍 Zoom</div>
+            <div class="control">Scroll wheel</div>
+            <div class="sub">Mac: pinch or 4-finger drag</div>
+          </div>
+          <div class="mouse-card">
+            <div class="action">👆 Select</div>
+            <div class="control">Ctrl + left click</div>
+            <div class="sub">+Shift to add to selection</div>
+          </div>
+          <div class="mouse-card">
+            <div class="action">🏷 Identify</div>
+            <div class="control">Hover (pause)</div>
+            <div class="sub">Shows residue/atom label</div>
+          </div>
+          <div class="mouse-card">
+            <div class="action">↩ Z-Rotate</div>
+            <div class="control">Ctrl + left drag</div>
+            <div class="sub">Rotates around viewing axis</div>
+          </div>
+        </div>
+
+<h3>The Command Line</h3>
+<p>The Command Line gives you control over every aspect of the software. It allows you to skip the process of clicking through menus and finding buttons with predetermined scripts. Intead, it allows you to create your own.</p>  
+
+<div style="height: 10px;"></div>  
+<p><strong>Useful Commands</strong></p>
+<div style="height: 10px;"></div> 
+
+<div class="tabs">
+
+<div id="tabgroup-2">
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('tabgroup-2','content-Opening', this)">Opening</button>
+    <button class="tab" onclick="switchTab('tabgroup-2','content-View', this)">View</button>
+    <button class="tab" onclick="switchTab('tabgroup-2','content-Selection', this)">Selection</button>
+    <button class="tab" onclick="switchTab('tabgroup-2','content-Representations', this)">Representations</button>
+    <button class="tab" onclick="switchTab('tabgroup-2','content-Coloring', this)">Coloring</button>
+  </div>
+  
+  <div class="tab-content active" id="content-Opening">
+      <h3>Fetching from RCSB PDB</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="comment"># These all fetch the same structure</span>
+    <span class="cmd">open</span> <span class="val">2gbp</span>                   <span class="comment"># simplest — 4-char ID defaults to RCSB</span>
+    <span class="cmd">open</span> <span class="val">2gbp</span> <span class="param">format</span> <span class="val">pdb</span>        <span class="comment"># force legacy PDB format</span>
+    <span class="cmd">open</span> <span class="val">pdb:2gbp</span>               <span class="comment"># explicit prefix syntax</span></pre>
+      </div>
+    
+      <h3>Fetching from Other Sources</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">open</span> <span class="val">emdb:3087</span>              <span class="comment"># EMDB electron density map</span>
+    <span class="cmd">open</span> <span class="val">alphafold:P12345</span>        <span class="comment"># AlphaFold predicted structure (UniProt ID)</span>
+    <span class="cmd">open</span> <span class="val">pubchem:2244</span>            <span class="comment"># PubChem 3D structure by CID</span>
+    <span class="cmd">open</span> <span class="val">smiles:c1ccccc1</span>         <span class="comment"># build from SMILES string</span>
+    <span class="cmd">open</span> <span class="val">iupac:aspirin</span>           <span class="comment"># build from IUPAC name</span></pre>
+      </div>
+    
+      <h3>Useful open Options</h3>
+      <table>
+        <tr><th>Option</th><th>Description</th></tr>
+        <tr><td style="color:#d99c1c">format pdb</td><td>Force a specific file format (pdb, mmcif, sdf, etc.)</td></tr>
+        <tr><td style="color:#d99c1c">coordsets true</td><td>Load a multi-model file as a trajectory instead of separate models</td></tr>
+        <tr><td style="color:#d99c1c">ignoreCache true</td><td>Force re-download even if the file is already cached</td></tr>
+        <tr><td style="color:#d99c1c">name my-name</td><td>Assign a custom name to the loaded model</td></tr>
+      </table>
+    
+      <h3>Managing Models</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><span class="cmd">close</span> <span class="val">#1</span>                    <span class="comment"># close model 1</span>
+    <span class="cmd">close</span> <span class="val">#2,4-6</span>               <span class="comment"># close models 2, 4, 5, 6</span>
+    <span class="cmd">close</span>                        <span class="comment"># close everything</span>
+    <span class="cmd">info</span> <span class="val">models</span>                 <span class="comment"># list all open models and their IDs</span>
+    <span class="cmd">save</span> <span class="val">~/session.cxs</span>         <span class="comment"># save current session</span></pre>
+      </div>
+      </div>   
+        
+  <div class="tab-content" id="content-View">
+      
+        <h3>View Command</h3>
+        <p>The <code>view</code> command focuses and resets the camera — essential for quickly navigating to a specific part of a structure.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><span class="cmd">view</span>                         <span class="comment"># fit all models in view</span>
+      <span class="cmd">view</span> <span class="val">#1</span>                     <span class="comment"># focus on model 1</span>
+      <span class="cmd">view</span> <span class="val">/A:50-100</span>              <span class="comment"># zoom to residues 50-100 of chain A</span>
+      <span class="cmd">view</span> <span class="val">orient</span>                 <span class="comment"># reset to standard orientation</span>
+      <span class="cmd">view</span> <span class="val">name</span> <span class="param">myview</span>           <span class="comment"># save current view</span>
+      <span class="cmd">view</span> <span class="val">myview</span> <span class="param">30</span>             <span class="comment"># restore saved view over 30 frames</span></pre>
+        </div>
+      
+        <h3>Zoom, Turn & Move Commands</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><span class="comment"># Zoom</span>
+      <span class="cmd">zoom</span> <span class="val">2</span>                      <span class="comment"># double the apparent size</span>
+      <span class="cmd">zoom</span> <span class="val">1.5</span> <span class="param">frames</span> <span class="val">20</span>         <span class="comment"># gradual zoom over 20 frames</span>
+      
+      <span class="comment"># Turn (rotate scene)</span>
+      <span class="cmd">turn</span> <span class="val">y</span> <span class="val">1</span> <span class="val">360</span>               <span class="comment"># full 360° Y-axis rotation, 1° per frame</span>
+      <span class="cmd">turn</span> <span class="val">x</span> <span class="val">90</span>                  <span class="comment"># 90° around X axis</span>
+      <span class="cmd">stop</span>                         <span class="comment"># stop any ongoing animation</span>
+      
+      <span class="comment"># Move (translate scene)</span>
+      <span class="cmd">move</span> <span class="val">x</span> <span class="val">5</span>                    <span class="comment"># translate 5 Å along X</span>
+      <span class="cmd">move</span> <span class="val">y</span> <span class="val">-2</span> <span class="val">10</span>               <span class="comment"># translate -2 Å along Y over 10 frames</span></pre>
+        </div>
+  </div>
+  <div class="tab-content" id="content-Selection">
+    <p>Selection is central to ChimeraX — almost every command accepts an atom specification to limit its scope. The syntax follows a hierarchy: <strong>#model / chain : residue @ atom</strong>.</p>
+  
+    <h3>The select Command</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">select</span>                        <span class="comment"># select everything</span>
+  <span class="cmd">select</span> <span class="val">/A</span>                    <span class="comment"># select chain A</span>
+  <span class="cmd">select</span> <span class="val">/A:50-100</span>             <span class="comment"># residues 50–100 in chain A</span>
+  <span class="cmd">select</span> <span class="val">:lys,arg</span>              <span class="comment"># all lysine and arginine residues</span>
+  <span class="cmd">select</span> <span class="val">@ca</span>                   <span class="comment"># all alpha-carbon atoms</span>
+  <span class="cmd">select</span> <span class="val">protein</span>               <span class="comment"># all protein residues</span>
+  <span class="cmd">select</span> <span class="val">ligand</span>                <span class="comment"># all ligand molecules</span>
+  <span class="cmd">select</span> <span class="val">helix</span>                 <span class="comment"># alpha-helix residues only</span>
+  <span class="cmd">~select</span>                       <span class="comment"># deselect everything</span></pre>
+    </div>
+  
+    <h3>Atom Specification Hierarchy</h3>
+    <table>
+      <tr><th>Symbol</th><th>Level</th><th>Example</th></tr>
+      <tr><td>#</td><td>Model</td><td>#1, #2, #1,3-5</td></tr>
+      <tr><td>/</td><td>Chain</td><td>/A, /B-D</td></tr>
+      <tr><td>:</td><td>Residue</td><td>:51, :12-25, :lys, :glu,arg</td></tr>
+      <tr><td>@</td><td>Atom</td><td>@ca, @n,ca,c,o, @S*</td></tr>
+    </table>
+    <p>Combine them — <code>#1/A:50@CA</code> means: model 1, chain A, residue 50, CA atom.</p>
+  
+    <h3>Boolean Operators</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="comment"># & = AND,  | = OR,  ~ = NOT</span>
+  <span class="cmd">select</span> <span class="val">/A</span> <span class="kw">&</span> <span class="val">protein</span>          <span class="comment"># chain A protein only</span>
+  <span class="cmd">select</span> <span class="val">helix</span> <span class="kw">&</span> <span class="val">:arg,lys</span>     <span class="comment"># Arg/Lys residues in helices</span>
+  <span class="cmd">select</span> <span class="kw">~</span><span class="val">protein</span>              <span class="comment"># everything except protein</span>
+  <span class="cmd">select</span> <span class="val">ligand</span> <span class="kw">|</span> <span class="val">solvent</span>     <span class="comment"># ligand OR solvent</span></pre>
+    </div>
+  
+    <h3>Distance-Based Selection</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="comment"># Select residues within 4.5 Å of ligand</span>
+  <span class="cmd">select</span> <span class="val">zone</span> <span class="val">ligand</span> <span class="val">4.5</span> <span class="val">protein</span> <span class="param">residues</span> <span class="val">true</span>
+  
+  <span class="comment"># Inline zone syntax</span>
+  <span class="cmd">select</span> <span class="val">ligand</span> <span class="val">:&lt; 5</span> <span class="kw">&</span> <span class="val">protein</span>  <span class="comment"># protein atoms within 5 Å of ligand</span></pre>
+    </div>
+  
+    <div class="alert alert-tip">
+      <strong>💡 Using sel</strong>
+      <code>sel</code> is a built-in reference to your current selection and works anywhere an atom spec is accepted — e.g. <code>color sel red</code> or <code>show sel atoms</code>.
+    </div>
+  </div>
+  <div class="tab-content" id="content-Representations">
+    <p>ChimeraX has three main visual representations: <strong>cartoon</strong> (ribbon), <strong>surface</strong>, and <strong>atoms/bonds</strong>. Each can be shown independently and styled per-atom, residue, or model.</p>
+  
+    <h3>Cartoon (Ribbon)</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">cartoon</span>                       <span class="comment"># show cartoon for all</span>
+  <span class="cmd">cartoon</span> <span class="val">#1</span>                    <span class="comment"># cartoon for model 1 only</span>
+  <span class="cmd">~cartoon</span>                      <span class="comment"># hide all cartoons</span>
+  
+  <span class="comment"># Styling</span>
+  <span class="cmd">cartoon style</span> <span class="param">helix</span> <span class="param">width</span> <span class="val">1.5</span> <span class="param">thickness</span> <span class="val">0.3</span>
+  <span class="cmd">cartoon style</span> <span class="param">strand</span> <span class="param">xsection</span> <span class="val">rectangle</span> <span class="param">width</span> <span class="val">2</span>
+  <span class="cmd">cartoon style</span> <span class="param">protein</span> <span class="param">modeHelix</span> <span class="val">tube</span>    <span class="comment"># tube-style helices</span></pre>
+    </div>
+  
+    <h3>Molecular Surface</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">surface</span> <span class="val">#1</span>                    <span class="comment"># surface for model 1</span>
+  <span class="cmd">surface</span> <span class="val">#1</span> <span class="param">transparency</span> <span class="val">50</span>   <span class="comment"># 50% transparent surface</span>
+  <span class="cmd">surface</span> <span class="val">enclose</span> <span class="val">#1</span>           <span class="comment"># one unified surface for all chains</span>
+  <span class="cmd">~surface</span>                      <span class="comment"># hide surfaces</span>
+  <span class="cmd">surface style</span> <span class="val">#1</span> <span class="val">mesh</span>        <span class="comment"># switch to mesh display</span></pre>
+    </div>
+  
+    <h3>Atoms & Bonds</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">show</span> <span class="val">#1</span> <span class="val">atoms</span>               <span class="comment"># show atoms for model 1</span>
+  <span class="cmd">hide</span> <span class="val">atoms</span>                   <span class="comment"># hide all atoms</span>
+  
+  <span class="comment"># style: sphere (CPK), stick, or ball (ball-and-stick)</span>
+  <span class="cmd">style</span> <span class="val">sphere</span>                 <span class="comment"># space-filling CPK</span>
+  <span class="cmd">style</span> <span class="val">stick</span>                  <span class="comment"># stick model</span>
+  <span class="cmd">style</span> <span class="val">ligand</span> <span class="val">ball</span>            <span class="comment"># ball-and-stick for ligand</span>
+  <span class="cmd">style</span> <span class="val">sel</span> <span class="val">sphere</span>             <span class="comment"># space-filling for current selection</span></pre>
+    </div>
+  
+    <h3>Show / Hide with Targets</h3>
+    <p>The <code>target</code> keyword lets you control exactly which representation a show/hide applies to using letter codes: <strong>a</strong> (atoms), <strong>c</strong> (cartoons), <strong>s</strong> (surfaces), <strong>m</strong> (models).</p>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">show</span> <span class="val">target</span> <span class="val">acs</span>             <span class="comment"># show atoms + cartoons + surfaces</span>
+  <span class="cmd">hide</span> <span class="val">/b-d</span> <span class="val">cartoons</span>           <span class="comment"># hide cartoon for chains B–D only</span>
+  <span class="cmd">hide</span> <span class="val">#1</span> <span class="val">surfaces</span>             <span class="comment"># hide surfaces on model 1</span></pre>
+    </div>
+  
+    <h3>Common Representation Combos</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="comment"># Cartoon with ligand in ball-and-stick</span>
+  <span class="cmd">cartoon</span>; <span class="cmd">hide</span> <span class="val">atoms</span>; <span class="cmd">show</span> <span class="val">ligand</span> <span class="val">atoms</span>; <span class="cmd">style</span> <span class="val">ligand</span> <span class="val">ball</span>
+  
+  <span class="comment"># Transparent surface over cartoon</span>
+  <span class="cmd">cartoon</span>; <span class="cmd">surface</span> <span class="val">#1</span> <span class="param">transparency</span> <span class="val">60</span>
+  
+  <span class="comment"># All-atom stick model</span>
+  <span class="cmd">show</span> <span class="val">atoms</span>; <span class="cmd">hide</span> <span class="val">cartoons</span>; <span class="cmd">style</span> <span class="val">stick</span></pre>
+    </div>
+  </div>
+  <div class="tab-content" id="content-Coloring">
+    <p>The <code>color</code> command handles everything from simple named colors to rainbow schemes, B-factor gradients, and electrostatic surfaces. The <code>target</code> string controls which representation gets colored.</p>
+  
+    <h3>Simple Coloring</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">color</span> <span class="val">red</span>                    <span class="comment"># color everything red</span>
+  <span class="cmd">color</span> <span class="val">#1</span> <span class="val">dodger blue</span>         <span class="comment"># color model 1</span>
+  <span class="cmd">color</span> <span class="val">/A:12,260-275</span> <span class="val">hot pink</span> <span class="val">atoms</span>   <span class="comment"># specific atoms only</span>
+  <span class="cmd">color</span> <span class="val">sel</span> <span class="val">cornflower blue</span>   <span class="comment"># color current selection</span></pre>
+    </div>
+  
+    <h3>Scheme-Based Coloring</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">color</span> <span class="val">byelement</span>              <span class="comment"># Jmol periodic-table colors</span>
+  <span class="cmd">color</span> <span class="val">byhetero</span>               <span class="comment"># element colors, leave carbon unchanged</span>
+  <span class="cmd">color</span> <span class="val">bychain</span>                <span class="comment"># distinct color per chain</span>
+  <span class="cmd">color</span> <span class="val">bymodel</span>                <span class="comment"># distinct color per model</span>
+  <span class="cmd">color</span> <span class="val">fromatoms</span>              <span class="comment"># match surface colors to atoms</span></pre>
+    </div>
+  
+    <h3>Rainbow Coloring</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">rainbow</span>                      <span class="comment"># rainbow by residue (blue → red)</span>
+  <span class="cmd">rainbow</span> <span class="val">chains</span>               <span class="comment"># one color per chain</span>
+  <span class="cmd">rainbow</span> <span class="val">:1-50</span>               <span class="comment"># rainbow only residues 1–50</span>
+  <span class="cmd">rainbow</span> <span class="param">palette</span> <span class="val">cornflowerblue:red:gold</span></pre>
+    </div>
+  
+    <h3>Coloring by B-Factor or Attribute</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">color</span> <span class="val">bfactor</span> <span class="val">/A</span> <span class="param">range</span> <span class="val">2,30</span>              <span class="comment"># B-factor gradient for chain A</span>
+  <span class="cmd">color</span> <span class="val">bfactor</span> <span class="val">protein</span> <span class="param">palette</span> <span class="val">rainbow</span>    <span class="comment"># rainbow B-factor</span>
+  <span class="cmd">color</span> <span class="val">electrostatic</span> <span class="val">#1</span> <span class="param">map</span> <span class="val">#2</span> <span class="param">palette</span> <span class="val">redblue</span> <span class="param">range</span> <span class="val">-10,10</span></pre>
+    </div>
+  
+    <h3>Transparency</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><span class="cmd">color</span> <span class="val">#1</span> <span class="val">red</span> <span class="param">transparency</span> <span class="val">50</span>
+  <span class="cmd">transparency</span> <span class="val">40</span> <span class="val">target</span> <span class="val">s</span>     <span class="comment"># set surface transparency independently</span></pre>
+    </div>
+  </div>
+</div>  
+</div>
+</section>
+  
+<div style="height: 40px;"></div>
+  
+<!-- MORPH INTRO -->
+<section id="morph">
+  <h2>The Morph Function</h2>
+  <p>The <code>morph</code> command interpolates atomic coordinates between two or more structures to create a smooth animated trajectory — ideal for showing open/closed states, ligand-induced changes, and domain movements.</p>
+
+  <div class="diagram">
+    <div class="mol-box"><div class="mol-icon">🧬</div><div class="mol-id">Structure A</div><div class="mol-label">Open / Apo state</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="morph-box"><div class="mol-icon" style="font-size:20px;margin-bottom:5px">✦✦✦</div><div class="morph-label">Interpolated<br>Frames</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="mol-box"><div class="mol-icon">🔬</div><div class="mol-id">Structure B</div><div class="mol-label">Closed / Holo state</div></div>
+  </div>
+
+  <h3>Command Syntax</h3>
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <pre><span class="cmd">morph</span> <span class="val">#1 #2</span> <span class="param">frames</span> <span class="val">30</span> <span class="param">method</span> <span class="val">corkscrew</span> <span class="param">rate</span> <span class="val">sinusoidal</span></pre>
+  </div>
+
+  <h3>Parameters Reference</h3>
+  <table>
+    <tr><th>Parameter</th><th>Description</th></tr>
+    <tr><td>frames N</td><td>Number of interpolated frames. Higher = smoother but larger. Default: 20</td></tr>
+    <tr><td>wrap true|false</td><td>If true, loops back to the first structure for cyclic animations</td></tr>
+    <tr><td>method linear|corkscrew</td><td><strong>corkscrew</strong> follows helical paths — more realistic for rotations. Default: corkscrew</td></tr>
+    <tr><td>rate linear|sinusoidal|ramp up|ramp down</td><td>Controls pacing. <strong>sinusoidal</strong> gives smooth ease-in/out. Default: linear</td></tr>
+    <tr><td>cartesian true|false</td><td>Interpolate in Cartesian space — helps with large conformational changes</td></tr>
+    <tr><td>same true|false</td><td>Skip alignment if structures are already atom-paired</td></tr>
+    <tr><td>core_fraction 0–1</td><td>Fraction of atoms used as rigid core for alignment during interpolation</td></tr>
+  </table>
+</section>
+
+<!-- MORPH WALKTHROUGH -->
+<section id="morph-walkthrough">
+  <h2>Morph Walkthrough</h2>
+  <p>This walkthrough uses <strong>Adenylate Kinase</strong> (1AKE → 4AKE) as the working example.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Fetch the Structures</h4>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">open</span> <span class="val">1AKE</span>
+<span class="cmd">open</span> <span class="val">4AKE</span>
+<span class="cmd">info</span> <span class="val">models</span>    <span class="comment"># confirm they loaded as #1 and #2</span></pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Align the Structures</h4>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">matchmaker</span> <span class="val">#2</span> <span class="param">to</span> <span class="val">#1</span>    <span class="comment"># superpose #2 onto #1</span></pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Run the Morph</h4>
+        <p>ChimeraX creates a new model (usually #3) containing the trajectory.</p>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">morph</span> <span class="val">#1 #2</span> <span class="param">frames</span> <span class="val">30</span> <span class="param">method</span> <span class="val">corkscrew</span> <span class="param">rate</span> <span class="val">sinusoidal</span></pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Hide Original Structures</h4>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">hide</span> <span class="val">#1,#2</span> <span class="val">models</span>
+<span class="cmd">show</span> <span class="val">#3</span> <span class="val">models</span></pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Style & Play</h4>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">cartoon</span> <span class="val">#3</span>
+<span class="cmd">color</span> <span class="val">#3</span> <span class="val">bychain</span>
+<span class="cmd">coordset</span> <span class="val">#3</span> <span class="param">play</span> <span class="val">true</span> <span class="param">loop</span> <span class="val">true</span> <span class="param">maxFrameRate</span> <span class="val">25</span></pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h4>Export as Video (Optional)</h4>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">movie</span> <span class="param">record</span>
+<span class="cmd">coordset</span> <span class="val">#3</span> <span class="param">play</span> <span class="val">true</span>
+<span class="cmd">movie</span> <span class="param">encode</span> <span class="val">~/morph_output.mp4</span></pre></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Useful Utility Commands</h3>
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <pre><span class="cmd">coordset</span> <span class="val">#3</span> <span class="val">15</span>              <span class="comment"># jump to frame 15</span>
+<span class="cmd">coordset</span> <span class="val">#3</span> <span class="param">pause</span>           <span class="comment"># stop playback</span>
+<span class="cmd">close</span> <span class="val">#3</span>                    <span class="comment"># delete morph model</span>
+<span class="cmd">log</span> <span class="val">clear</span>                   <span class="comment"># clear the command log</span>
+<span class="cmd">undo</span>                         <span class="comment"># undo last command</span>
+<span class="cmd">help</span> <span class="val">morph</span>                  <span class="comment"># open morph docs in browser</span></pre>
+  </div>
+</section>
+  
+<!-- SCRIPTS -->
+<section id="scripts">
+  <h2>Downloadable Materials</h2>
+  <p>Individual models and Ready-to-run <strong>.cxc ChimeraX scripts</strong> — open them via <strong>File → Open</strong> or drag onto the ChimeraX window. Each script fetches, aligns, morphs, styles, and plays automatically.</p>
+<div class="cards" style="grid-template-columns: repeat(3, 1fr);">
+
+  <div class="card">
+    <div class="tag">Start Here</div>
+    <h4>Adenylate Kinase</h4>
+    <div class="pdb-ids"><span class="pdb-id">1AKE</span><span class="arrow">→</span><span class="pdb-id">4AKE</span></div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button class="btn btn-green" onclick="downloadStructure('1AKE', '1AKE')">⬇ 1AKE</button>
+      <button class="btn btn-green" onclick="downloadStructure('4AKE', '4AKE')">⬇ 4AKE</button>
+      <button class="btn btn-green" onclick="downloadScript('adenylate_kinase','1AKE','4AKE','Adenylate Kinase open-closed morph')">⬇ Morph Script</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="tag">Signaling</div>
+    <h4>Calmodulin</h4>
+    <div class="pdb-ids"><span class="pdb-id">1CLL</span><span class="arrow">→</span><span class="pdb-id">1CTR</span></div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button class="btn btn-green" onclick="downloadStructure('1CLL', '1CLL')">⬇ 1CLL</button>
+      <button class="btn btn-green" onclick="downloadStructure('1CTR', '1CTR')">⬇ 1CTR</button>
+      <button class="btn btn-green" onclick="downloadScript('calmodulin','1CLL','1CTR','Calmodulin Ca2+ conformational change')">⬇ Morph Script</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="tag">Enzyme</div>
+    <h4>HIV Protease</h4>
+    <div class="pdb-ids"><span class="pdb-id">1HHP</span><span class="arrow">→</span><span class="pdb-id">2HVP</span></div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button class="btn btn-green" onclick="downloadStructure('1HHP', '1HHP')">⬇ 1HHP</button>
+      <button class="btn btn-green" onclick="downloadStructure('2HVP', '2HVP')">⬇ 2HVP</button>
+      <button class="btn btn-green" onclick="downloadScript('hiv_protease','1HHP','2HVP','HIV Protease flap open-closed morph')">⬇ Morph Script</button>
+    </div>
+  </div>
+
+</div>
+</section>
+  
+</main>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function downloadStructure(name, pdbId) {
+  const content = `# ChimeraX Script — Open ${pdbId}
+# -----------------------------------------------
+open ${pdbId}
+`;
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${name}.cxc`;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+  
+function downloadScript(name, pdb1, pdb2, description) {
+  const content = `# ChimeraX Morph Script — ${description}
+# Structures: ${pdb1} -> ${pdb2}
+# -----------------------------------------------
+open ${pdb1}
+wait
+open ${pdb2}
+wait
+matchmaker #2 to #1
+wait
+morph #1 #2 frames 30 method corkscrew rate sinusoidal
+hide #1,#2 models
+show #3 models
+cartoon #3
+color #3 bychain
+coordset #3 play true loop true maxFrameRate 25
+
+# To save as video:
+#   movie record
+#   coordset #3 play true
+#   movie encode ~/${name}_morph.mp4
+`;
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${name}_morph.cxc`;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+  // just add this new one at the bottom
+  function switchTab(groupId, contentId, el) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  group.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(contentId).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
