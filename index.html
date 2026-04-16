@@ -118,6 +118,35 @@
   .mouse-card .control { font-size: 13px; color: var(--text); margin-bottom: 3px; }
   .mouse-card .sub { font-size: 12px; color: var(--muted); }
 
+  /* TOGGLE BAR */
+  .toggle-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.toggle-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  transition: all .15s;
+}
+.toggle-btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+.toggle-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
   ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 </style>
 </head>
@@ -146,401 +175,33 @@
 <p>The toolbar is divided into sections with shortcuts for quick actions. Each section is described below.</p>
 
 </section>
+
+<!--OPEN A FILE-->
+<section id="Open">
+<h1>WRITE SOMETHING HERE</h1>
   
  <!--TOOLBAR--> 
-<section id="Tool">
-<div style="display: flex; gap: 5px;">
-  <div style="flex: 1;">
-    <h2 style="border-bottom: none; margin-top: 18px; margin-bottom: 0px;">The Toolbar</h2>
-  </div>
-  <div style="flex: 1;">
-    <p style="color: #9196A1">Remember these buttons only work on the selected atoms, not whole molecular structures</p>
-  </div>
-</div>
+<section id="Matrix">
+<h2 style="border-bottom: none; margin-top: 18px; margin-bottom: 0px;">The Toolbar</h2>
+
 <hr style="border: none; border-top: 1px solid #dce8f5; margin-top: 18px margin-bottom: 32px 0;" />
 
-<div id="tabgroup-1">
-  <div class="tab-bar">
-    <button class="tab active" onclick="switchTab('tabgroup-1','content-Home', this)">Home</button>
-    <button class="tab" onclick="switchTab('tabgroup-1','content-Molecule_Display', this)">Molecule Display</button>
-    <button class="tab" onclick="switchTab('tabgroup-1','content-Nucleotides', this)">Nucleotides</button>
-    <button class="tab" onclick="switchTab('tabgroup-1','content-Graphics', this)">Graphics</button>
-    <button class="tab" onclick="switchTab('tabgroup-1','content-Map', this)">Map</button>
-    <button class="tab" onclick="switchTab('tabgroup-1','content-Medical_Image', this)">Medical Image</button>
-    <button class="tab" onclick="switchTab('tabgroup-1','content-Markers', this)">Markers</button>
-    <button class="tab" onclick="switchTab('tabgroup-1','content-Right_Mouse', this)">Right Mouse</button>
+<div id="tabgroup-mouse">
+  <div class="toggle-bar">
+    <button class="toggle-btn active" onclick="switchTab('tabgroup-mouse','content-Viewing', this)">Viewing</button>
+    <button class="toggle-btn" onclick="switchTab('tabgroup-mouse','content-Editing', this)">Editing</button>
   </div>
-  
-  <div class="tab-content active" id="content-Home">
-    <img src="Home_menu.png" alt="Home menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
-    <h3>File</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Open —</strong> Opens a local file from your computer, the same as opening a file in Word or any other program.</p>
-      </div>
-      <div class="item">
-        <p><strong>Recent —</strong> Pulls up a menu showing all files you've worked on recently so you can quickly pick up where you left off.</p>
-      </div>
-      <div class="item">
-        <p><strong>Save —</strong> Saves the current state of your session, including the structure, styling, and view.</p>
-      </div>
-    </div>
-    
-    <h3>Images</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Snapshot —</strong> Takes a screenshot of the molecule exactly as it appears on screen — same colors, lighting, and angle — and saves it to your computer.</p>
-      </div>
-      <div class="item">
-        <p><strong>Spin Movie —</strong> Records a short video of the molecule rotating and saves it to your computer. Useful for presentations or publications.</p>
-      </div>
-    </div>
-    
-    <h3>Atoms, Cartoons, & Styles</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Show / Hide Atoms —</strong> Toggles atom visibility, letting you switch between the full atomic structure and just the ribbon diagram.</p>
-      </div>
-      <div class="item">
-        <p><strong>Show / Hide Cartoon —</strong> Toggles the ribbon representation, letting you switch between the cartoon view and the raw atomic structure.</p>
-      </div>
-      <div class="item">
-        <p><strong>Stick / Sphere / Ball-and-Stick —</strong> Three separate buttons that each switch the display style of your molecule. Stick shows bonds as rods, Sphere shows each atom as a full-sized ball (CPK style), and Ball-and-Stick combines both.</p>
-      </div>
-    </div>
-    
-    <h3>Background and Lighting</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Background —</strong> Switches between a white and black background. Black works better for presentations; white is cleaner for figures.</p>
-      </div>
-      <div class="item">
-        <p><strong>Lighting —</strong> Changes the lighting between simple, soft, and full, helping you highlight different structural features.</p>
-      </div>
-    </div>
-    
-    <h3>Inspect</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Inspect —</strong> Opens a panel showing all properties of the selected chains — atom count, color, residues, pseudobonds, and more.</p>
-      </div>
-    </div>
+
+  <div class="tab-content active" id="content-Viewing">
+    <!-- viewing content -->
+    <h3>WRITE SOMETHING HERE</h3>
   </div>
-  <div class="tab-content" id="content-Molecule_Display">
-      <img src="Molecule Display_menu.png" alt="Home menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
-      <h3>Atoms, Cartoon, Surfaces & Styles</h3>
-      <div class="group">
-        <div class="item">
-          <p><strong>Show / Hide Atoms —</strong> Toggles atom visibility, letting you switch between the full atomic structure and just the ribbon diagram.</p>
-        </div>
-        <div class="item">
-          <p><strong>Show / Hide Cartoon —</strong> Toggles the ribbon representation, letting you switch between the cartoon view and the raw atomic structure.</p>
-        </div>
-        <div class="item">
-          <p><strong>Show / Hide Surfaces —</strong> Toggles the representation of molecular surfaces, letting you switch between the surface view and the raw atomic structure.</p>
-        </div>
-        <div class="item">
-          <p><strong>Styles —</strong> Allows you to switch between stick, sphere, and ballstick models for the mplecular structure, as well as choose a style for aminoacid chains in the structure</p>
-        </div>
-      </div>
-     
-      <h3>Coloring</h3>
-      <div class="group">
-        <div class="item">
-          <p><strong>Heteroatom —</strong> Color-codes heteroatoms in a molecular model by element following CPK color conventions.</p>
-        </div>
-        <div class="item">
-          <p><strong>Chain —</strong> Color-codes chains in a molecular model by chain ID (each chain has a different color).</p>
-        </div>
-        <div class="item">
-          <p><strong>Polymer —</strong> Color-codes polymer chains in a molecular model by chain sequence (chains with the same sequence have the same color).</p>
-        </div>
-        <div class="item">
-          <p><strong>Rainbow —</strong> Creates a color gradient (blue to red) starting at the N-terminus, and ending at the C-terminus of only the selected atoms.</p>
-        </div>
-        <div class="item">
-          <p><strong>Electrostatic —</strong> Maps the electrostatic potential onto the surface of a molecular structure. Positive regions are colored red, negative regions are colored blue.</p>
-        </div>
-        <div class="item">
-          <p><strong>Hydrophobic —</strong> Colors the surface of a molecular diagram by hydrophobicity.</p>
-        </div>
-        <div class="item">
-          <p><strong>B-factor —</strong> Colors atoms or surface of a molecular model by their b-factor value from the PDB file. High B-factor regions are colored with shades of red, while low B-factor regions are colored with shades of blue.</p>
-        </div>
-        <div class="item">
-          <p><strong>Nucleotide —</strong> Color-codes selected nucleotide chains by nitrogenous base.</p>
-        </div>
-      </div>
-  </div>
-  <div class="tab-content" id="content-Nucleotides">
-    <img src="Nucleotide_menu.png" alt="Nucleotide menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
-    <h3>Styles</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Styles —</strong> Allows you to choose between plain, filled, slab, tube/slab, tube/ellipsoid, tube/muffler, ladder, or stubs styles to view selected nucleotide chains.</p>
-      </div>
-    </div>
-    <h3>Coloring</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Nucleotide —</strong> Color-codes selected nucleotide chains by nitrogenous base.</p>
-      </div>
-    </div>
-  </div>
-  <div class="tab-content" id="content-Graphics">
-    <img src="Graphics_menu.png" alt="Nucleotide menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
-    <h3>Background</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Background —</strong> Allows you to choose between a white, grey, or black background for the molecular model.</p>
-      </div>
-    </div>
-    
-    <h3>Lighting & Effects</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Lighting —</strong> Allow you to choose between simple, soft, or full lighting for the molecular model.</p>
-      </div>
-      <div class="item">
-        <p><strong>Flat —</strong> Gets rid of any kind of texture in the model, making it look flat.</p>
-      </div>
-      <div class="item">
-        <p><strong>Shadow —</strong> Adds or removes shadows from each atom in the molecular model.</p>
-      </div>
-      <div class="item">
-        <p><strong>Silhouete —</strong> Adds or removes outlines from the atoms in the molecular model.</p>
-      </div>
-    </div>
-  
-    <h3>Camera</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Side View —</strong> Opens a small secondary window that shows a top-down orthographic view of the molecular model from the side. It displays the camera position and clipping planes.</p>
-      </div>
-      <div class="item">
-        <p><strong>View Selected—</strong> Zooms and reorient the camera to fit the selected atoms or residues. Centering them in the window.</p>
-      </div>
-      <div class="item">
-        <p><strong>View All—</strong> Zooms and reorient the camera to fit the whole molecular model. Centering it in the window.</p>
-      </div>
-      <div class="item">
-        <p><strong>Orient—</strong> Resets the camera to a standard viewing orientation. It rotates the scene so that the X axis ponts right, Y points up, and Z points towards the viewer</p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="tab-content" id="content-Map">
-    <img src="Map_menu.png" alt="Map menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
-    <p style="color: #9196A1">Remember these buttons only work with density maps, not molecular structures.</p>
-    <div style="height: 20px;"></div>
-    <h3>Map & Style</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Show / Hide Map —</strong> Toggles volume map visibility.</p>
-      </div>
-      <div class="item">
-        <p><strong>Style —</strong> Allows you to switch the map diplay between a solid surface, a wireframe mesh, or a flat image slice.</p>
-      </div>
-      <div class="item">
-        <p><strong>Transparent Surface —</strong> Makes the map surface see-through.</p>
-      </div>
-      <div class="item">
-        <p><strong>Outline Box —</strong> Shows a bounding box around the map.</p>
-      </div>
-    </div>
-    <h3>Steps</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Step 1 —</strong> Full resolution of the map.</p>
-      </div>
-      <div class="item">
-        <p><strong>Step 2 —</strong> Half resolution of the map.</p>
-      </div>
-    </div>
-    <h3>Subregions</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Z-plane —</strong> Shows a single flat slice through the map along the Z axis.</p>
-      </div>
-      <div class="item">
-        <p><strong>Slab —</strong> Shows a thick slab slice through the map.</p>
-      </div>
-      <div class="item">
-        <p><strong>Orthoplanes —</strong> Shows three perpendicular slices (X, Y, Z) simultaneously.</p>
-      </div>
-      <div class="item">
-        <p><strong>Full —</strong> Shows the full 3D map.</p>
-      </div>
-      <div class="item">
-        <p><strong>Zone —</strong> Displays only the part of the map within a certain distance of selected atoms.</p>
-      </div>
-    </div>
-    <h3>Appearance</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Color Near Atoms —</strong> Colors the map surface based on nearby atom types.</p>
-      </div>
-      <div class="item">
-        <p><strong>Hide Dust —</strong> Removes small disconnected blobs of density, cleaning up the map display.</p>
-      </div>
-    </div>
-    <h3>Calculations</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Fit —</strong> Fits a model into the desity map.</p>
-      </div>
-      <div class="item">
-        <p><strong>Subtract —</strong> Subtracts one map from another.</p>
-      </div>
-      <div class="item">
-        <p><strong>Smooth —</strong> Smooths the map by averaging neighboring denisty values.</p>
-      </div>
-    </div>
-  </div>
-  <div class="tab-content" id="content-Medical_Image">
-    <img src="Medical Image_menu.png" alt="Medical Image menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
-  </div>
-  <div class="tab-content" id="content-Markers">
-    <img src="Markers_menu.png" alt="Markers menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
-    <h3>Place Markers</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Maximum —</strong> Places markers at the nearest density maximum.</p>
-      </div>
-      <div class="item">
-        <p><strong>Plane —</strong> Place markers on a flat plane.</p>
-      </div>
-      <div class="item">
-        <p><strong>Surface —</strong> Place markers on the surface of a model.</p>
-      </div>
-      <div class="item">
-        <p><strong>Center —</strong> Places a marker at the center of a selected region.</p>
-      </div>
-      <div class="item">
-        <p><strong>Point —</strong> Place markers at an arbitrary clicked position.</p>
-      </div>
-    </div>
-    <h3>Place Markers</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Link —</strong> Draws a line connecting two markers.</p>
-      </div>
-      <div class="item">
-        <p><strong>Move —</strong> Repositions an existing marker.</p>
-      </div>
-      <div class="item">
-        <p><strong>Resize —</strong> Changes the size of a marker.</p>
-      </div>
-      <div class="item">
-        <p><strong>Delete —</strong> Removes a marker.</p>
-      </div>
-    </div>
-  </div>
-  <div class="tab-content" id="content-Right_Mouse">
-    <img src="Right Mouse_menu.png" alt="Right Mouse menu" style="width: 100%; border-radius: 5px; margin: 16px 0;"/>
-    <p style="color: #9196A1">Remember these buttons work to change the function of the right mouse button.</p>
-    <div style="height: 20px;"></div>
-    <h3>Movement</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Select —</strong> Swtches right mouse button to selection mode.</p>
-      </div>
-      <div class="item">
-        <p><strong>Rotate —</strong> Rotates the whole scene.</p>
-      </div>
-      <div class="item">
-        <p><strong>Translate —</strong> Moves the whole scene without rotating.</p>
-      </div>
-      <div class="item">
-        <p><strong>Rotate Model —</strong> Rotates only the selected model.</p>
-      </div>
-      <div class="item">
-        <p><strong>Drag Model —</strong> Drag a specific model around.</p>
-      </div>
-      <div class="item">
-        <p><strong>Move atoms —</strong> Individually move selected atoms around.</p>
-      </div>
-      <div class="item">
-        <p><strong>Pivot —</strong> Sets the center of rotation to a clicked atom.</p>
-      </div>
-    </div>
-    <h3>Annotation</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Distance —</strong> Measures the distance between two clicked atoms.</p>
-      </div>
-      <div class="item">
-        <p><strong>Label —</strong> Add a text label to a selected atom or residue.</p>
-      </div>
-      <div class="item">
-        <p><strong>Move Label —</strong> Reposition existing labels.</p>
-      </div>
-      <div class="item">
-        <p><strong>Key —</strong> Adds a color key legen to the scene.</p>
-      </div>
-    </div>
-    <h3>Clipping</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Clip —</strong> Activates a clipping plane you can drag to slice through the structure.</p>
-      </div>
-      <div class="item">
-        <p><strong>Clip Rotate —</strong> Rotates the clipping plane.</p>
-      </div>
-      <div class="item">
-        <p><strong>Zone —</strong> Shows only atoms within a set distance of clicked atoms.</p>
-      </div>
-    </div>
-    <h3>Map</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Counter Level —</strong> Drag to adjust the density threshold of a map.</p>
-      </div>
-      <div class="item">
-        <p><strong>Rotate Slab —</strong> Rotates the slab slice.</p>
-      </div>
-      <div class="item">
-        <p><strong>Crop —</strong> Crops the map to a smaller region.</p>
-      </div>
-      <div class="item">
-        <p><strong>Tapé —</strong> Measures distances between points.</p>
-      </div>
-      <div class="item">
-        <p><strong>Blob —</strong> Selects a connected region of density.</p>
-      </div>
-      <div class="item">
-        <p><strong>Erase —</strong> erases parts of a map.</p>
-      </div>
-      <div class="item">
-        <p><strong>Play Series —</strong> Plays through a series of maps or frames.</p>
-      </div>
-      <div class="item">
-        <p><strong>Windowing —</strong> Adjusts the brightness and contrast of image-style map display.</p>
-      </div>
-    </div>
-    <h3>Structure Modification</h3>
-    <div class="group">
-      <div class="item">
-        <p><strong>Bond Rotation —</strong> Drag to rotate around a selected bond.</p>
-      </div>
-      <div class="item">
-        <p><strong>Swapaa —</strong> Swaps an amino acid sidechain to a different rotamer.</p>
-      </div>
-      <div class="item">
-        <p><strong>Play coords —</strong> Plays through a trajectory or coordinate set.</p>
-      </div>
-      <div class="item">
-        <p><strong>Tug —</strong> Drag atoms with simulated force (real-time mlecular dynamics).</p>
-      </div>
-      <div class="item">
-        <p><strong>Minimize —</strong> Energy minimizes the structure.</p>
-      </div>
-      <div class="item">
-        <p><strong>Next Docked —</strong> Cycles through docked poses.</p>
-      </div>
-    </div>
+  <div class="tab-content" id="content-Editing">
+    <!-- editing content -->
+    <h3>WRITE SOMETHING HERE</h3>
   </div>
 </div>
+
 </div>
 </section>  
 
