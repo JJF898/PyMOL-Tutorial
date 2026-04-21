@@ -171,7 +171,7 @@
 <section id="Intro">
 <h2>Getting Started</h2>
 <p>This is what you see when you first open ChimeraX. The top toolbar contains most of the basic functions you'll need to open a protein and visualize its structure.</p>
-<img src="Homepage.png" alt="ChimeraX Homepage" style="width: 100%; border-radius: 5px; margin: 16px 0;" />
+<img src="Homepage.png" alt="PyMOL Homepage" style="width: 100%; border-radius: 5px; margin: 16px 0;" />
 <p>The toolbar is divided into sections with shortcuts for quick actions. Each section is described below.</p>
 
 </section>
@@ -187,6 +187,9 @@
 <hr style="border: none; border-top: 1px solid #dce8f5; margin-top: 18px margin-bottom: 32px 0;" />
 
 <div id="tabgroup-mouse">
+  <p>This is a guide to the function of each button in the app. Each column represents a button on your mouse (Left, Middle, Right, and wheel). Each row represents a different key. 
+    Pairing them gives you whatever function is described on the matrix. Keep in mind that the first row represents the mouse click without pressing any key.</p>
+  <p>Clicking on the Mouse mode button allow you to switch between Viewing & Editing modes</p>
   <div class="toggle-bar">
     <button class="toggle-btn tab active" onclick="switchTab('tabgroup-mouse','content-Viewing', this)">Viewing</button>
     <button class="toggle-btn tab" onclick="switchTab('tabgroup-mouse','content-Editing', this)">Editing</button>
@@ -194,10 +197,33 @@
 
   <div class="tab-content active" id="content-Viewing">
     <!-- viewing content -->
+    <img src="V Selection Matrix.png" alt="Selection Matrix" style="width: 100%; border-radius: 5px; margin: 16px 0;" />
     <h3>WRITE SOMETHING HERE 1</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Left</th>
+          <th>Middle</th>
+          <th>Right</th>
+          <th>Wheel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <p><stong>Rota - </stong>Adjust depth of visible slab</p>
+            <p><strong>+ Box - </strong>Add atoms to the selection using a box</p>
+          </td>
+          <td>text</td>
+          <td>text</td>
+          <td>text</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div class="tab-content" id="content-Editing">
     <!-- editing content -->
+     <img src="E Selection Matrix.png" alt="Selection Matrix" style="width: 100%; border-radius: 5px; margin: 16px 0;" />
     <h3>WRITE SOMETHING HERE 2</h3>
   </div>
 </div>
