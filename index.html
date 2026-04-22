@@ -303,50 +303,52 @@
       <div class="step-num">1</div>
       <div class="step-body">
         <h4>Fetch the Structures</h4>
-        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">open</span> <span class="val">1AKE</span>
-<span class="cmd">open</span> <span class="val">4AKE</span>
-<span class="cmd">info</span> <span class="val">models</span>    <span class="comment"># confirm they loaded as #1 and #2</span></pre></div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">fetch</span> <span class="val">1akeA</span>, <span class="param">async</span>=<span class="val">0</span>
+<span class="cmd">fetch</span> <span class="val">4akeA</span>, <span class="param">async</span>=<span class="val">0</span></pre></div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-body">
         <h4>Align the Structures</h4>
-        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">matchmaker</span> <span class="val">#2</span> <span class="param">to</span> <span class="val">#1</span>    <span class="comment"># superpose #2 onto #1</span></pre></div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">align</span> <span class="val">1akeA</span>, <span class="val">4akeA</span></pre></div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-body">
         <h4>Run the Morph</h4>
-        <p>ChimeraX creates a new model (usually #3) containing the trajectory.</p>
-        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">morph</span> <span class="val">#1 #2</span> <span class="param">frames</span> <span class="val">30</span> <span class="param">method</span> <span class="val">corkscrew</span> <span class="param">rate</span> <span class="val">sinusoidal</span></pre></div>
+        <p>PyMOL creates a new multi-state object containing the interpolated trajectory.</p>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">morph</span> <span class="val">mymovie</span>, <span class="val">1akeA</span>, <span class="val">4akeA</span>, <span class="param">refinement</span>=<span class="val">3</span>, <span class="param">steps</span>=<span class="val">30</span></pre></div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">4</div>
       <div class="step-body">
-        <h4>Hide Original Structures</h4>
-        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">hide</span> <span class="val">#1,#2</span> <span class="val">models</span>
-<span class="cmd">show</span> <span class="val">#3</span> <span class="val">models</span></pre></div>
+        <h4>Hide Originals & Style</h4>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">disable</span> <span class="val">1akeA</span>
+<span class="cmd">disable</span> <span class="val">4akeA</span>
+<span class="cmd">as</span> <span class="val">cartoon</span>, <span class="val">mymovie</span>
+<span class="cmd">util.cbc</span> <span class="val">mymovie</span></pre></div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">5</div>
       <div class="step-body">
-        <h4>Style & Play</h4>
-        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">cartoon</span> <span class="val">#3</span>
-<span class="cmd">color</span> <span class="val">#3</span> <span class="val">bychain</span>
-<span class="cmd">coordset</span> <span class="val">#3</span> <span class="param">play</span> <span class="val">true</span> <span class="param">loop</span> <span class="val">true</span> <span class="param">maxFrameRate</span> <span class="val">25</span></pre></div>
+        <h4>Play the Morph</h4>
+        <p>Use the VCR controls at the bottom of the Viewer, or run:</p>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">mset</span> <span class="val">1 x30</span>
+<span class="cmd">mplay</span></pre></div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">6</div>
       <div class="step-body">
         <h4>Export as Video (Optional)</h4>
-        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">movie</span> <span class="param">record</span>
-<span class="cmd">coordset</span> <span class="val">#3</span> <span class="param">play</span> <span class="val">true</span>
-<span class="cmd">movie</span> <span class="param">encode</span> <span class="val">~/morph_output.mp4</span></pre></div>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">set</span> <span class="param">ray_trace_frames</span>, <span class="val">1</span>
+<span class="cmd">mpng</span> <span class="val">morph_frames/frame</span>
+<span class="comment"># Then stitch with FFmpeg:</span>
+<span class="comment"># ffmpeg -r 30 -i frame%04d.png -c:v libx264 output.mp4</span></pre></div>
       </div>
     </div>
   </div>
@@ -354,15 +356,13 @@
   <h3>Useful Utility Commands</h3>
   <div class="code-block">
     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-    <pre><span class="cmd">coordset</span> <span class="val">#3</span> <span class="val">15</span>              <span class="comment"># jump to frame 15</span>
-<span class="cmd">coordset</span> <span class="val">#3</span> <span class="param">pause</span>           <span class="comment"># stop playback</span>
-<span class="cmd">close</span> <span class="val">#3</span>                    <span class="comment"># delete morph model</span>
-<span class="cmd">log</span> <span class="val">clear</span>                   <span class="comment"># clear the command log</span>
-<span class="cmd">undo</span>                         <span class="comment"># undo last command</span>
-<span class="cmd">help</span> <span class="val">morph</span>                  <span class="comment"># open morph docs in browser</span></pre>
+    <pre><span class="cmd">frame</span> <span class="val">15</span>                     <span class="comment"># jump to frame 15</span>
+<span class="cmd">mstop</span>                         <span class="comment"># stop playback</span>
+<span class="cmd">delete</span> <span class="val">mymovie</span>               <span class="comment"># delete morph object</span>
+<span class="cmd">undo</span>                          <span class="comment"># undo last command</span>
+<span class="cmd">help</span> <span class="val">morph</span>                   <span class="comment"># open morph docs</span></pre>
   </div>
-</section>
-  
+</section>  
 <!-- SCRIPTS -->
 <section id="scripts">
   <h2>Downloadable Materials</h2>
