@@ -156,9 +156,9 @@
   <h2>PyMOL Tutorial</h2>
   
   <span class="nav-section">Getting started</span>
-  <a href="#Intro">Introduction</div>
-  <a href="#Tool">The Toolbar</div>
-  <a href="#Command">The Command Line</a>
+  <a href="#Intro">Opening a Structure</div>
+  <a href="#Open">The Toolbar</div>
+  <a href="#Matrix">The Selection Matrix</a>
   <span class="nav-section">The morph function</span>
   <a href="#morph">The Morph Function</a>
   <a href="#morph-walkthrough">Morph Walkthrough</a>
@@ -178,7 +178,53 @@
 
 <!--OPEN A FILE-->
 <section id="Open">
-<h1>WRITE SOMETHING HERE</h1>
+  <h2>Opening Your First Structure</h2>
+  <p>There are two main ways to load a structure into PyMOL: fetching directly from the Protein Data Bank, or opening a local file from your computer.</p>
+
+  <h3>From the PDB</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Type the fetch command</h4>
+        <p>Click on the command line at the bottom of the Viewer (the <code>PyMOL></code> prompt) and type:</p>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">fetch</span> <span class="val">1ubq</span></pre></div>
+        <p>Replace <code>1ubq</code> with any 4-character PDB ID. PyMOL will download the structure and display it automatically.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Orient and explore</h4>
+        <p>Once loaded, type <code>orient</code> to center the molecule and align it along its longest axis. Then use your mouse to rotate (left drag), translate (middle drag), and zoom (right drag).</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>From a Local File</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Use the menu</h4>
+        <p>In the External GUI, go to <strong>File → Open</strong> and browse to your <code>.pdb</code>, <code>.cif</code>, or <code>.mol2</code> file. Alternatively, type:</p>
+        <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><span class="cmd">load</span> <span class="val">/path/to/myprotein.pdb</span></pre></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Check the Object Panel</h4>
+        <p>Your structure should appear in the <strong>Object Panel</strong> on the right side of the Viewer. Use the <strong>A/S/H/L/C</strong> buttons next to the object name to control its Actions, Show, Hide, Labels, and Colors.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-tip">
+    <strong>💡 Quick tip</strong>
+    You can also drag and drop <code>.pdb</code> or <code>.cif</code> files directly onto the PyMOL Viewer window to open them.
+  </div>
+</section>
   
  <!--TOOLBAR--> 
 <section id="Matrix">
