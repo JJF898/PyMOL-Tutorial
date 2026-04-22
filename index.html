@@ -265,7 +265,7 @@
 <!-- MORPH INTRO -->
 <section id="morph">
   <h2>The Morph Function</h2>
-  <p>The <code>morph</code> command interpolates atomic coordinates between two or more structures to create a smooth animated trajectory — ideal for showing open/closed states, ligand-induced changes, and domain movements.</p>
+  <p>The <code>morph</code> command (Incentive PyMOL) uses the RigiMOL algorithm to generate smooth interpolations between two conformational states, preserving local geometry better than simple linear interpolation. It's ideal for visualizing open/closed states, ligand-induced changes, and domain movements.</p>
 
   <div class="diagram">
     <div class="mol-box"><div class="mol-icon">🧬</div><div class="mol-id">Structure A</div><div class="mol-label">Open / Apo state</div></div>
@@ -278,20 +278,23 @@
   <h3>Command Syntax</h3>
   <div class="code-block">
     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-    <pre><span class="cmd">morph</span> <span class="val">#1 #2</span> <span class="param">frames</span> <span class="val">30</span> <span class="param">method</span> <span class="val">corkscrew</span> <span class="param">rate</span> <span class="val">sinusoidal</span></pre>
+    <pre><span class="cmd">morph</span> <span class="val">mymovie</span>, <span class="val">obj1</span>, <span class="val">obj2</span>, <span class="param">refinement</span>=<span class="val">3</span>, <span class="param">steps</span>=<span class="val">30</span>, <span class="param">method</span>=<span class="val">rigimol</span></pre>
   </div>
 
   <h3>Parameters Reference</h3>
   <table>
     <tr><th>Parameter</th><th>Description</th></tr>
-    <tr><td>frames N</td><td>Number of interpolated frames. Higher = smoother but larger. Default: 20</td></tr>
-    <tr><td>wrap true|false</td><td>If true, loops back to the first structure for cyclic animations</td></tr>
-    <tr><td>method linear|corkscrew</td><td><strong>corkscrew</strong> follows helical paths — more realistic for rotations. Default: corkscrew</td></tr>
-    <tr><td>rate linear|sinusoidal|ramp up|ramp down</td><td>Controls pacing. <strong>sinusoidal</strong> gives smooth ease-in/out. Default: linear</td></tr>
-    <tr><td>cartesian true|false</td><td>Interpolate in Cartesian space — helps with large conformational changes</td></tr>
-    <tr><td>same true|false</td><td>Skip alignment if structures are already atom-paired</td></tr>
-    <tr><td>core_fraction 0–1</td><td>Fraction of atoms used as rigid core for alignment during interpolation</td></tr>
+    <tr><td>steps N</td><td>Number of intermediate frames. Default: 30</td></tr>
+    <tr><td>refinement N</td><td>Sculpting cycles to clean distorted intermediates. Default: 3</td></tr>
+    <tr><td>method rigimol|linear</td><td><strong>rigimol</strong> preserves local geometry (default). <strong>linear</strong> = simple Cartesian interpolation</td></tr>
+    <tr><td>match align|super|in|like</td><td>How to pair atoms between the two structures</td></tr>
+    <tr><td>state1 0</td><td>Morph between all consecutive states in a multi-state object (loop)</td></tr>
   </table>
+
+  <div class="alert alert-tip">
+    <strong>💡 GUI shortcut</strong>
+    You can also access the morph from the Object Panel: select your object, then click <strong>A → generate → morph → to molecule</strong> and pick the target object.
+  </div>
 </section>
 
 <!-- MORPH WALKTHROUGH -->
