@@ -259,13 +259,75 @@
 
 </div>
 </section>  
-  
-<div style="height: 40px;"></div>
+
+<section id="useful">
+  <h2>Quick Reference Commands</h2>
+  <p>Handy commands that don't fit into the categories above but come up constantly in everyday use.</p>
+
+  <h3>Session & Housekeeping</h3>
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <pre><span class="cmd">reinitialize</span>                  <span class="comment"># full reset — clears everything</span>
+<span class="cmd">delete</span> <span class="val">all</span>                    <span class="comment"># remove all objects but keep settings</span>
+<span class="cmd">save</span> <span class="val">session.pse</span>              <span class="comment"># save full session</span>
+<span class="cmd">load</span> <span class="val">session.pse</span>              <span class="comment"># restore a saved session</span>
+<span class="cmd">undo</span>                          <span class="comment"># undo last action (limited)</span>
+<span class="cmd">quit</span>                          <span class="comment"># exit PyMOL</span></pre>
+  </div>
+
+  <h3>Display & Background</h3>
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <pre><span class="cmd">bg_color</span> <span class="val">white</span>                <span class="comment"># white background (default is black)</span>
+<span class="cmd">orient</span>                        <span class="comment"># align molecule along principal axes</span>
+<span class="cmd">reset</span>                         <span class="comment"># reset view to original orientation</span>
+<span class="cmd">set</span> <span class="param">seq_view</span>, <span class="val">on</span>             <span class="comment"># show the sequence viewer bar</span>
+<span class="cmd">set</span> <span class="param">valence</span>, <span class="val">1</span>               <span class="comment"># show double/triple bonds</span>
+<span class="cmd">set</span> <span class="param">depth_cue</span>, <span class="val">0</span>             <span class="comment"># disable distance fog</span></pre>
+  </div>
+
+  <h3>Exporting Images</h3>
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <pre><span class="cmd">ray</span> <span class="val">2400</span>, <span class="val">2400</span>               <span class="comment"># ray-trace at high resolution</span>
+<span class="cmd">png</span> <span class="val">figure.png</span>, <span class="param">dpi</span>=<span class="val">300</span>     <span class="comment"># save image after ray tracing</span>
+<span class="cmd">png</span> <span class="val">figure.png</span>, <span class="param">ray</span>=<span class="val">1</span>       <span class="comment"># ray-trace and save in one step</span>
+<span class="cmd">set</span> <span class="param">ray_opaque_background</span>, <span class="val">0</span> <span class="comment"># transparent background for export</span></pre>
+  </div>
+
+  <h3>Structural Alignment</h3>
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <pre><span class="cmd">align</span> <span class="val">obj1</span>, <span class="val">obj2</span>             <span class="comment"># sequence-based alignment (best for >30% identity)</span>
+<span class="cmd">super</span> <span class="val">obj1</span>, <span class="val">obj2</span>             <span class="comment"># structure-based (better for low similarity)</span>
+<span class="cmd">cealign</span> <span class="val">obj2</span>, <span class="val">obj1</span>           <span class="comment"># CE algorithm (most robust, but target comes FIRST)</span>
+<span class="cmd">rms_cur</span> <span class="val">obj1</span>, <span class="val">obj2</span>           <span class="comment"># RMSD without fitting (current coordinates)</span></pre>
+  </div>
+
+  <h3>Object Management</h3>
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <pre><span class="cmd">enable</span> <span class="val">obj1</span>                  <span class="comment"># show object in viewer</span>
+<span class="cmd">disable</span> <span class="val">obj1</span>                 <span class="comment"># hide object from viewer</span>
+<span class="cmd">group</span> <span class="val">mygroup</span>, <span class="val">obj1 obj2</span>     <span class="comment"># group objects together</span>
+<span class="cmd">create</span> <span class="val">newobj</span>, <span class="val">chain A</span>       <span class="comment"># create new object from selection</span>
+<span class="cmd">extract</span> <span class="val">ligand_obj</span>, <span class="val">organic</span>  <span class="comment"># extract selection into new object (removes from original)</span></pre>
+  </div>
+
+  <h3>Scripting Basics</h3>
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <pre><span class="cmd">@</span><span class="val">myscript.pml</span>               <span class="comment"># run a .pml script</span>
+<span class="cmd">run</span> <span class="val">myscript.py</span>              <span class="comment"># run a Python script</span>
+<span class="cmd">log_open</span> <span class="val">mylog.pml</span>           <span class="comment"># start recording commands to a file</span>
+<span class="cmd">log_close</span>                     <span class="comment"># stop recording</span></pre>
+  </div>
+</section>
   
 <!-- MORPH INTRO -->
 <section id="morph">
   <h2>The Morph Function</h2>
-  <p>The <code>morph</code> command interpolates atomic coordinates between two or more structures to create a smooth animated trajectory — ideal for showing open/closed states, ligand-induced changes, and domain movements.</p>
+  <p>The <code>morph</code> command (Incentive PyMOL) uses the RigiMOL algorithm to generate smooth interpolations between two conformational states, preserving local geometry better than simple linear interpolation. It's ideal for visualizing open/closed states, ligand-induced changes, and domain movements.</p>
 
   <div class="diagram">
     <div class="mol-box"><div class="mol-icon">🧬</div><div class="mol-id">Structure A</div><div class="mol-label">Open / Apo state</div></div>
@@ -278,20 +340,23 @@
   <h3>Command Syntax</h3>
   <div class="code-block">
     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-    <pre><span class="cmd">morph</span> <span class="val">#1 #2</span> <span class="param">frames</span> <span class="val">30</span> <span class="param">method</span> <span class="val">corkscrew</span> <span class="param">rate</span> <span class="val">sinusoidal</span></pre>
+    <pre><span class="cmd">morph</span> <span class="val">mymovie</span>, <span class="val">obj1</span>, <span class="val">obj2</span>, <span class="param">refinement</span>=<span class="val">3</span>, <span class="param">steps</span>=<span class="val">30</span>, <span class="param">method</span>=<span class="val">rigimol</span></pre>
   </div>
 
   <h3>Parameters Reference</h3>
   <table>
     <tr><th>Parameter</th><th>Description</th></tr>
-    <tr><td>frames N</td><td>Number of interpolated frames. Higher = smoother but larger. Default: 20</td></tr>
-    <tr><td>wrap true|false</td><td>If true, loops back to the first structure for cyclic animations</td></tr>
-    <tr><td>method linear|corkscrew</td><td><strong>corkscrew</strong> follows helical paths — more realistic for rotations. Default: corkscrew</td></tr>
-    <tr><td>rate linear|sinusoidal|ramp up|ramp down</td><td>Controls pacing. <strong>sinusoidal</strong> gives smooth ease-in/out. Default: linear</td></tr>
-    <tr><td>cartesian true|false</td><td>Interpolate in Cartesian space — helps with large conformational changes</td></tr>
-    <tr><td>same true|false</td><td>Skip alignment if structures are already atom-paired</td></tr>
-    <tr><td>core_fraction 0–1</td><td>Fraction of atoms used as rigid core for alignment during interpolation</td></tr>
+    <tr><td>steps N</td><td>Number of intermediate frames. Default: 30</td></tr>
+    <tr><td>refinement N</td><td>Sculpting cycles to clean distorted intermediates. Default: 3</td></tr>
+    <tr><td>method rigimol|linear</td><td><strong>rigimol</strong> preserves local geometry (default). <strong>linear</strong> = simple Cartesian interpolation</td></tr>
+    <tr><td>match align|super|in|like</td><td>How to pair atoms between the two structures</td></tr>
+    <tr><td>state1 0</td><td>Morph between all consecutive states in a multi-state object (loop)</td></tr>
   </table>
+
+  <div class="alert alert-tip">
+    <strong>💡 GUI shortcut</strong>
+    You can also access the morph from the Object Panel: select your object, then click <strong>A → generate → morph → to molecule</strong> and pick the target object.
+  </div>
 </section>
 
 <!-- MORPH WALKTHROUGH -->
@@ -376,7 +441,9 @@
     <div style="display: flex; flex-direction: column; gap: 8px;">
       <button class="btn btn-green" onclick="downloadStructure('1AKE', '1AKE')">⬇ 1AKE</button>
       <button class="btn btn-green" onclick="downloadStructure('4AKE', '4AKE')">⬇ 4AKE</button>
+      <!--
       <button class="btn btn-green" onclick="downloadScript('adenylate_kinase','1AKE','4AKE','Adenylate Kinase open-closed morph')">⬇ Morph Script</button>
+      -->
     </div>
   </div>
 
@@ -387,7 +454,9 @@
     <div style="display: flex; flex-direction: column; gap: 8px;">
       <button class="btn btn-green" onclick="downloadStructure('1CLL', '1CLL')">⬇ 1CLL</button>
       <button class="btn btn-green" onclick="downloadStructure('1CTR', '1CTR')">⬇ 1CTR</button>
+      <!--
       <button class="btn btn-green" onclick="downloadScript('calmodulin','1CLL','1CTR','Calmodulin Ca2+ conformational change')">⬇ Morph Script</button>
+      -->
     </div>
   </div>
 
@@ -398,7 +467,9 @@
     <div style="display: flex; flex-direction: column; gap: 8px;">
       <button class="btn btn-green" onclick="downloadStructure('1HHP', '1HHP')">⬇ 1HHP</button>
       <button class="btn btn-green" onclick="downloadStructure('2HVP', '2HVP')">⬇ 2HVP</button>
+      <!--
       <button class="btn btn-green" onclick="downloadScript('hiv_protease','1HHP','2HVP','HIV Protease flap open-closed morph')">⬇ Morph Script</button>
+      -->
     </div>
   </div>
 
